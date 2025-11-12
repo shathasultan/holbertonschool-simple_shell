@@ -1,4 +1,5 @@
- #include "main.h"
+#include "shell.h"
+#include "main.h"
 
 /**
  * print_error - Print error message
@@ -19,7 +20,7 @@ void print_error(char *shell_name, int cmd_count, char *cmd)
  * @line: Original line
  * @copy: Copy of line
  */
-void exec_child(char *cmd_path, char **args, char *line, char *copy)
+void exec_child(char *cmd_path, char **args)
 {
 	if (execve(cmd_path, args, environ) == -1)
 	{
@@ -40,13 +41,14 @@ void exec_child(char *cmd_path, char **args, char *line, char *copy)
  * @info: Shell info structure
  * Return: Exit status of command
  */
-int exec_cmd(char **args, char *line, char *copy, t_shell *info)
+int exec_cmd(char **args, t_shell *info)
 {
 	pid_t pid;
 	char *cmd_path;
 	int status;
 
-	if (is_builtin(args, line, copy, info->last_status))
+	if (execute_builtin(args))
+    return (0);
 		return (0);
 	cmd_path = find_in_path(args[0]);
 	if (!cmd_path)
@@ -63,7 +65,7 @@ int exec_cmd(char **args, char *line, char *copy, t_shell *info)
 		return (1);
 	}
 	if (pid == 0)
-		exec_child(cmd_path, args, line, copy);
+		exec_child(cmd_path, args);
 	else
 	{
 		wait(&status);

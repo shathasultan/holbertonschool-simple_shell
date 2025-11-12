@@ -22,7 +22,7 @@ int process_line(char *line, t_shell *info)
 		free(copy);
 		return (0);
 	}
-	status = exec_cmd(args, line, copy, info);
+	status = exec_cmd(args, info);
 	free(copy);
 	return (status);
 }
