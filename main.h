@@ -38,5 +38,9 @@ int _strlen(char *s);
 int _strcmp(char *s1, char *s2);
 char *_strdup(char *str);
 char *_strchr(char *s, char c);
+int _strlen(char *s);
+int _strcmp(char *s1, char *s2);
+char *_strdup(char *str);
+char *_strchr(char *s, char c);
 
 #endif
