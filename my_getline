@@ -1,0 +1,72 @@
+#include <stdlib.h>
+#include <unistd.h>
+
+#define BUF_SIZE 1024
+
+/**
+ * my_getline - reads a line from stdin
+ * @lineptr: pointer to the buffer to store the line
+ * @n: pointer to size of the buffer
+ *
+ * Return: number of characters read, or -1 on EOF/error
+ */
+ssize_t my_getline(char **lineptr, size_t *n)
+{
+    static char buf[BUF_SIZE];   // internal buffer
+    static size_t pos = 0;       // current read position
+    static size_t len = 0;       // total chars in buffer
+    size_t i = 0;                // position in line
+    char *line;
+
+    if (!lineptr || !n)
+        return -1;
+
+    // Allocate initial buffer if needed
+    if (*lineptr == NULL || *n == 0)
+    {
+        *n = 128;
+        *lineptr = malloc(*n);
+        if (!*lineptr)
+            return -1;
+    }
+
+    line = *lineptr;
+
+    while (1)
+    {
+        // Refill buffer if empty
+        if (pos >= len)
+        {
+            len = read(STDIN_FILENO, buf, BUF_SIZE);
+            if (len <= 0)
+                return (i == 0) ? -1 : i; // EOF or error
+            pos = 0;
+        }
+
+        // Copy characters from buffer to line
+        while (pos < len)
+        {
+            // Expand line buffer if needed
+            if (i + 1 >= *n)
+            {
+                size_t new_size = *n * 2;
+                char *tmp = malloc(new_size);
+                if (!tmp)
+                    return -1;
+                for (size_t j = 0; j < i; j++)  // manual copy
+                    tmp[j] = line[j];
+                free(line);
+                line = tmp;
+                *lineptr = line;
+                *n = new_size;
+            }
+
+            line[i++] = buf[pos];
+
+            pos++;
+
+            if (line[i-1] == '\n') // end of line
+                return i;
+        }
+    }
+}
