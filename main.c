@@ -1,3 +1,7 @@
+/**
+ * File: main.c
+ * Description: Contains helper functions for trimming and parsing input
+ */
 #include "main.h"
 
 /**

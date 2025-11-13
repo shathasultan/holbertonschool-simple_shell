@@ -33,5 +33,10 @@ int handle_env(void);
 int is_builtin(char **args, char *line, char *copy, int last_status);
 int exec_cmd(char **args, char *line, char *copy, t_shell *info);
 int process_line(char *line, t_shell *info);
+char *_getline(void);
+int _strlen(char *s);
+int _strcmp(char *s1, char *s2);
+char *_strdup(char *str);
+char *_strchr(char *s, char c);
 
 #endif
